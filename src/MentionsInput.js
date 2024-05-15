@@ -145,6 +145,7 @@ class MentionsInput extends React.Component {
     document.addEventListener('copy', this.handleCopy)
     document.addEventListener('cut', this.handleCut)
     document.addEventListener('paste', this.handlePaste)
+    window.addEventListener('trigger-shadow-root-input-onSelect', this.handleSelect)
 
     this.updateSuggestionsPosition()
   }
@@ -172,6 +173,7 @@ class MentionsInput extends React.Component {
     document.removeEventListener('copy', this.handleCopy)
     document.removeEventListener('cut', this.handleCut)
     document.removeEventListener('paste', this.handlePaste)
+    window.addEventListener('trigger-shadow-root-input-onSelect', this.handleSelect)
   }
 
   render() {
@@ -586,7 +588,10 @@ class MentionsInput extends React.Component {
   }
 
   // Handle input element's select event
-  handleSelect = (ev) => {
+  handleSelect = (event) => {
+    // get event from shadow root if exists
+    // for shadow roots there will be custom event which will fire on input select and send the event from shadow root
+    const ev = event.detail ? event.detail.event : event
     // keep track of selection range / caret position
     this.setState({
       selectionStart: ev.target.selectionStart,
